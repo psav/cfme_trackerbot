@@ -1,0 +1,3 @@
+# Django 1.7, replace with Django>=1.7 when released
+https://www.djangoproject.com/download/1.7c1/tarball/
+django-tastypie
