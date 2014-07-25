@@ -10,6 +10,7 @@ api = Api('api')
 api.register(resources.TemplateResource())
 api.register(resources.ProviderResource())
 api.register(resources.GroupResource())
+api.register(resources.ProviderTemplateDetailResource())
 
 urlpatterns = api.urls + patterns('',
     # Examples:

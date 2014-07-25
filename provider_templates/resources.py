@@ -1,9 +1,39 @@
 from django.conf.urls import url
+from django.contrib.auth.models import AnonymousUser
+from django.db import IntegrityError
+from tastypie import fields
 from tastypie.authentication import ApiKeyAuthentication
-from tastypie.authorization import DjangoAuthorization
-from tastypie.resources import ModelResource, ALL
+from tastypie.authorization import Authorization as DjangoAuthorization
+from tastypie.http import HttpUnauthorized
+from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
 from tastypie.utils import trailing_slash
 import models
+
+
+class AnonymousApiKeyAuthentication(ApiKeyAuthentication):
+    def is_authenticated(self, request, **kwargs):
+        authorized = super(AnonymousApiKeyAuthentication, self).is_authenticated(request, **kwargs)
+        if isinstance(authorized, HttpUnauthorized):
+            if request.method == 'GET':
+                request.user = AnonymousUser()
+                return True
+            else:
+                return authorized
+
+
+class TemplateResource(ModelResource):
+    group = fields.ToOneField('provider_templates.resources.GroupResource', 'group', full=True)
+
+    class Meta:
+        queryset = models.Template.objects.all()
+        resource_name = 'template'
+        authentication = ApiKeyAuthentication()
+        authorization = DjangoAuthorization()
+        filtering = {
+            'group': ALL,
+            'usable': ALL,
+            'datestamp': ALL,
+        }
 
 
 class ProviderResource(ModelResource):
@@ -15,6 +45,11 @@ class ProviderResource(ModelResource):
 
 
 class GroupResource(ModelResource):
+    latest_template = fields.ToOneField(TemplateResource, 'latest_template',
+        readonly=True, full=True, blank=True, null=True)
+    latest_template_providers = fields.ToManyField(ProviderResource, 'latest_template_providers',
+        readonly=True, full=True, blank=True, null=True)
+
     class Meta:
         queryset = models.Group.objects.all()
         resource_name = 'group'
@@ -41,10 +76,11 @@ class GroupResource(ModelResource):
     def get_latest_template(self, request, **kwargs):
         try:
             latest_template = self._obj(request, **kwargs).latest_template
-            providers = [p.key for p in latest_template.providers.all()]
+            providers = latest_template.providers.filter(providertemplatedetail_usable=True)
+            provider_keys = [p.key for p in providers]
             latest_template_providers = {
                 'latest_template': latest_template.name,
-                'latest_template_providers': providers
+                'latest_template_providers': provider_keys
             }
         except models.Template.DoesNotExist:
             latest_template_providers = None
@@ -52,36 +88,34 @@ class GroupResource(ModelResource):
         return self.create_response(request, latest_template_providers)
 
 
-class TemplateResource(ModelResource):
+class ProviderTemplateDetailResource(ModelResource):
+    id = fields.CharField(attribute='concat_id')
+    template = fields.ToOneField(TemplateResource, 'template', full=True)
+    provider = fields.ToOneField(ProviderResource, 'provider', full=True)
+
     class Meta:
-        queryset = models.Template.objects.all()
-        resource_name = 'template'
+        queryset = models.ProviderTemplateDetail.objects.all()
+        resource_name = 'providertemplate'
         authentication = ApiKeyAuthentication()
         authorization = DjangoAuthorization()
         filtering = {
-            'group': ALL,
+            'template': ALL_WITH_RELATIONS,
+            'provider': ALL_WITH_RELATIONS,
             'usable': ALL,
-            'datestamp': ALL,
+            'tested': ALL
         }
+        excludes = ['concat_id']
+        detail_uri_name = 'concat_id'
 
-    # dehydrate: turn provider and group objects into strings
-    def dehydrate(self, bundle):
-        bundle.data['group'] = bundle.obj.group.name
-        bundle.data['providers'] = [provider.key for provider in bundle.obj.providers.all()]
-        return super(TemplateResource, self).dehydrate(bundle)
-
-    # hydrate: turn provider and group strings into objects, creating providers if needed
-    def hydrate(self, bundle):
+    def obj_create(self, bundle, **kwargs):
+        # Custom obj create to support using concat_id as our fake id/detail_uri_name
+        # Catches a uniqueness constraint error and updates the existing object rather than
+        # exploding
+        parent = super(ProviderTemplateDetailResource, self)
         try:
-            bundle.obj = models.Template.objects.get(name=bundle.data['name'])
-        except models.Template.DoesNotExist:
-            bundle.obj = models.Template(name=bundle.data['name'],
-                datestamp=bundle.data['datestamp'])
-        bundle.obj.group = models.Group.objects.get(name=bundle.data['group'])
-        providers = []
-        for provider_key in bundle.data['providers']:
-            # Will create provider keys that don't exist
-            provider, __ = models.Provider.objects.get_or_create(key=provider_key)
-            providers.append(provider)
-        bundle.obj.providers = providers
-        return super(TemplateResource, self).hydrate(bundle)
+            return parent.obj_create(bundle, **kwargs)
+        except IntegrityError:
+            template, provider = bundle.data['template']['name'], bundle.data['provider']['key']
+            bundle.obj = models.ProviderTemplateDetail.objects.get(
+                template=template, provider=provider)
+            return parent.obj_update(bundle, **kwargs)
