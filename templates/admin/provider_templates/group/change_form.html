@@ -1,0 +1,15 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_urls %}
+{% block content %}
+{% if original.latest_template %}
+<div>Latest Usable Template: <code>{{original.latest_template}}</code></div>
+<div>Latest Template Providers:
+<ul>
+{% for p in original.latest_template.providers.all %}
+<li><code>{{p.key}}</code></li>
+{% endfor %}
+</ul>
+</pre></div>
+{% endif %}
+{{ block.super }}
+{% endblock %}
