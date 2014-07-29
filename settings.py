@@ -100,3 +100,8 @@ STATIC_URL = '/static/'
 
 # Version of bootstrap to pull from the CDN
 BOOTSTRAP_VERSION = '3.0.3'
+
+try:
+    from settings_local import *
+except ImportError:
+    pass

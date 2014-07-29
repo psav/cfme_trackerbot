@@ -13,8 +13,5 @@ api.register(resources.GroupResource())
 api.register(resources.ProviderTemplateDetailResource())
 
 urlpatterns = api.urls + patterns('',
-    # Examples:
-    # url(r'^$', 'cfme_trackerbot.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
     url(r'^admin/', include(admin.site.urls)),
 )
