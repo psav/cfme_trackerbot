@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'tastypie',
+    'tastypie_swagger',
     'provider_templates',
 )
 
@@ -95,8 +96,13 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
-
 STATIC_URL = '/static/'
+
+# Static files are collected into this dir
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# api to document with swagger
+TASTYPIE_SWAGGER_API_MODULE = 'urls.api'
 
 # Version of bootstrap to pull from the CDN
 BOOTSTRAP_VERSION = '3.0.3'
