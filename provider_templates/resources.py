@@ -1,24 +1,10 @@
 from django.conf.urls import url
-from django.contrib.auth.models import AnonymousUser
 from django.db import IntegrityError
 from tastypie import fields
-from tastypie.authentication import ApiKeyAuthentication
-from tastypie.authorization import Authorization as DjangoAuthorization
-from tastypie.http import HttpUnauthorized
+from tastypie.authorization import Authorization
 from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
 from tastypie.utils import trailing_slash
 import models
-
-
-class AnonymousApiKeyAuthentication(ApiKeyAuthentication):
-    def is_authenticated(self, request, **kwargs):
-        authorized = super(AnonymousApiKeyAuthentication, self).is_authenticated(request, **kwargs)
-        if isinstance(authorized, HttpUnauthorized):
-            if request.method == 'GET':
-                request.user = AnonymousUser()
-                return True
-            else:
-                return authorized
 
 
 class TemplateResource(ModelResource):
@@ -27,8 +13,7 @@ class TemplateResource(ModelResource):
     class Meta:
         queryset = models.Template.objects.all()
         resource_name = 'template'
-        authentication = ApiKeyAuthentication()
-        authorization = DjangoAuthorization()
+        authorization = Authorization()
         filtering = {
             'group': ALL,
             'usable': ALL,
@@ -40,16 +25,14 @@ class ProviderResource(ModelResource):
     class Meta:
         queryset = models.Provider.objects.all()
         resource_name = 'provider'
-        authentication = ApiKeyAuthentication()
-        authorization = DjangoAuthorization()
+        authorization = Authorization()
 
 
 class GroupResource(ModelResource):
     class Meta:
         queryset = models.Group.objects.all()
         resource_name = 'group'
-        authentication = ApiKeyAuthentication()
-        authorization = DjangoAuthorization()
+        authorization = Authorization()
 
     def prepend_urls(self):
         return [
@@ -97,8 +80,7 @@ class ProviderTemplateDetailResource(ModelResource):
     class Meta:
         queryset = models.ProviderTemplateDetail.objects.all()
         resource_name = 'providertemplate'
-        authentication = ApiKeyAuthentication()
-        authorization = DjangoAuthorization()
+        authorization = Authorization()
         filtering = {
             'template': ALL_WITH_RELATIONS,
             'provider': ALL_WITH_RELATIONS,
