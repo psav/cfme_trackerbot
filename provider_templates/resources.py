@@ -45,11 +45,6 @@ class ProviderResource(ModelResource):
 
 
 class GroupResource(ModelResource):
-    latest_template = fields.ToOneField(TemplateResource, 'latest_template',
-        readonly=True, full=True, blank=True, null=True)
-    latest_template_providers = fields.ToManyField(ProviderResource, 'latest_template_providers',
-        readonly=True, full=True, blank=True, null=True)
-
     class Meta:
         queryset = models.Group.objects.all()
         resource_name = 'group'
@@ -86,6 +81,12 @@ class GroupResource(ModelResource):
             latest_template_providers = None
 
         return self.create_response(request, latest_template_providers)
+
+    def dehydrate(self, bundle):
+        template, providers = bundle.obj.latest_template, bundle.obj.latest_template_providers
+        bundle.data['latest_template'] = template.name
+        bundle.data['latest_template_providers'] = [p.key for p in providers]
+        return bundle
 
 
 class ProviderTemplateDetailResource(ModelResource):
