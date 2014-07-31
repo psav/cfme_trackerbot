@@ -87,9 +87,16 @@ class Group(models.Model):
     @property
     def latest_template(self):
         # For a given group, list the latest usable template
-        return Template.objects.filter(providertemplatedetail__usable=True, group=self).latest()
+        try:
+            return Template.objects.filter(providertemplatedetail__usable=True, group=self).latest()
+        except Template.DoesNotExist:
+            return None
 
     @property
     def latest_template_providers(self):
         # For a given group, list the latest usable template
-        return self.latest_template.providers.filter(providertemplatedetail__usable=True)
+        latest_template = self.latest_template
+        if latest_template is not None:
+            return latest_template.providers.filter(providertemplatedetail__usable=True)
+        else:
+            return []
