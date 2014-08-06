@@ -43,6 +43,18 @@ class Provider(models.Model):
     def __unicode__(self):
         return self.key
 
+    @property
+    def latest_templates(self):
+        # For a given provider, list the latest templates for each group
+        templates = {}
+        for group in Group.objects.all():
+            try:
+                templates[group] = Template.objects.filter(providertemplatedetail__usable=True,
+                    providertemplatedetail__provider=self, group=group).latest()
+            except Template.DoesNotExist:
+                templates[group] = None
+        return templates
+
 
 # Template/Provider through model, annotes templates per provider to track
 # whether a template has been tested on each provider, and whether or not it's usable

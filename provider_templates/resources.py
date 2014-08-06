@@ -25,6 +25,11 @@ class ProviderResource(ModelResource):
         resource_name = 'provider'
         authorization = Authorization()
 
+    def dehydrate(self, bundle):
+        templates = {g.name: t for g, t in bundle.obj.latest_templates.items()}
+        bundle.data['latest_template'] = templates
+        return bundle
+
 
 class GroupResource(ModelResource):
     class Meta:
