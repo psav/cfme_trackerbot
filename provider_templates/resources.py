@@ -18,6 +18,10 @@ class TemplateResource(ModelResource):
             'datestamp': ALL,
         }
 
+    def dehydrate(self, bundle):
+        bundle.data['usable_providers'] = [p.key for p in bundle.obj.usable_providers]
+        return bundle
+
 
 class ProviderResource(ModelResource):
     class Meta:
@@ -26,8 +30,19 @@ class ProviderResource(ModelResource):
         authorization = Authorization()
 
     def dehydrate(self, bundle):
-        templates = {g.name: t for g, t in bundle.obj.latest_templates.items()}
-        bundle.data['latest_template'] = templates
+        templates = {}
+        for group, template in bundle.obj.latest_templates.items():
+            if template is not None:
+                templates[group.name] = {
+                    'latest_template': template.name,
+                    'latest_template_providers': [p.key for p in template.usable_providers]
+                }
+            else:
+                templates[group.name] = {
+                    'latest_template': None,
+                    'latest_template_providers': []
+                }
+        bundle.data['latest_templates'] = templates
         return bundle
 
 

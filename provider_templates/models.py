@@ -31,6 +31,10 @@ class Template(models.Model):
 
         return super(Template, self).save(*args, **kwargs)
 
+    @property
+    def usable_providers(self):
+        return self.providers.filter(providertemplatedetail__usable=True)
+
 
 class Provider(models.Model):
     key = models.CharField(max_length=255, primary_key=True)
