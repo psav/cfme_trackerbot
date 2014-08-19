@@ -18,6 +18,7 @@ api.register(resources.ProviderTemplateDetailResource())
 
 urlpatterns = patterns('',
     url(r'', include(api.urls)),
+    url(r'^templates_to_test$', 'provider_templates.views.templates_to_test'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api/doc', include('tastypie_swagger.urls', namespace='tastypie_swagger')),
     url('^$', RedirectView.as_view(url=reverse_lazy('tastypie_swagger:index'), permanent=False))
