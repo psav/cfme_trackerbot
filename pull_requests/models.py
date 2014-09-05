@@ -14,7 +14,7 @@ class PR(models.Model):
 
 
 class Run(models.Model):
-    pr = models.ForeignKey('PR', related_name='pr')
+    pr = models.ForeignKey('PR', related_name='run_set')
     result = models.CharField(max_length=255)
     commit = models.CharField(max_length=255, default="None")
     datestamp = models.DateTimeField()
@@ -24,7 +24,7 @@ class Run(models.Model):
 
 
 class Task(models.Model):
-    run = models.ForeignKey('Run', related_name='run')
+    run = models.ForeignKey('Run', related_name='task_set')
     output = models.TextField()
     result = models.CharField(max_length=255)
     template = models.CharField(max_length=255, default="None")
