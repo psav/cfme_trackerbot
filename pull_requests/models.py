@@ -1,5 +1,5 @@
 from django.db import models
-#from provider_templates.models import Template
+from provider_templates.models import Template
 
 
 # Create your models here.
@@ -27,7 +27,7 @@ class Task(models.Model):
     run = models.ForeignKey('Run', related_name='task_set')
     output = models.TextField()
     result = models.CharField(max_length=255)
-    template = models.CharField(max_length=255, default="None")
+    template = models.ForeignKey('Template')
 
     def __unicode__(self):
         return "{}: {}".format(int(self.run.pr.number), self.template)
