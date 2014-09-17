@@ -73,7 +73,7 @@ class ProviderTemplateDetail(models.Model):
         verbose_name = 'Provider/Template Detail'
         verbose_name_plural = 'Provider/Template Details'
         get_latest_by = 'template__datestamp'
-        ordering = ['concat_id']
+        ordering = ['-template__datestamp', 'concat_id']
         unique_together = ('template', 'provider')
 
     def __unicode__(self):
