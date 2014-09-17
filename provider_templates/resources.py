@@ -51,6 +51,9 @@ class GroupResource(ModelResource):
         queryset = models.Group.objects.all()
         resource_name = 'group'
         authorization = Authorization()
+        filtering = {
+            'stream': ALL
+        }
 
     def dehydrate(self, bundle):
         template, providers = bundle.obj.latest_template, bundle.obj.latest_template_providers

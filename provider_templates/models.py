@@ -91,6 +91,8 @@ class ProviderTemplateDetail(models.Model):
 # but can be handy for things like power control
 class Group(models.Model):
     name = models.CharField(max_length=63, primary_key=True)
+    # Whether or not this group is an appliance stream, which usually it usually will be
+    stream = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = 'Group'
