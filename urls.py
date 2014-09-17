@@ -7,6 +7,7 @@ from django.views.generic.base import RedirectView
 from tastypie.api import Api
 
 from provider_templates import resources
+from pull_requests import resources as pr_resources
 
 admin.autodiscover()
 
@@ -15,6 +16,10 @@ api.register(resources.TemplateResource())
 api.register(resources.ProviderResource())
 api.register(resources.GroupResource())
 api.register(resources.ProviderTemplateDetailResource())
+api.register(pr_resources.PRResource())
+api.register(pr_resources.RunResource())
+api.register(pr_resources.TaskResource())
+
 
 urlpatterns = patterns('',
     url(r'', include(api.urls)),

@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'tastypie',
     'tastypie_swagger',
     'provider_templates',
+    'pull_requests',
     'south',
 )
 
