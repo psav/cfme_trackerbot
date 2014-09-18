@@ -49,3 +49,8 @@ class TaskResource(ModelResource):
         resource_name = 'task'
         authorization = Authorization()
         filtering = {'result': ALL, 'cleanup': ALL}
+
+    def dehydrate(self, bundle):
+        bundle.data['pr_number'] = bundle.obj.run.pr.number
+
+        return bundle
