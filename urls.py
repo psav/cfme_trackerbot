@@ -8,6 +8,7 @@ from tastypie.api import Api
 
 from provider_templates import resources
 from pull_requests import resources as pr_resources
+from pull_requests import views
 
 admin.autodiscover()
 
@@ -26,7 +27,10 @@ urlpatterns = patterns('',
     url(r'^templates_to_test$', 'provider_templates.views.templates_to_test'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api/doc', include('tastypie_swagger.urls', namespace='tastypie_swagger')),
-    url('^$', RedirectView.as_view(url=reverse_lazy('tastypie_swagger:index'), permanent=False))
+    url('^$', RedirectView.as_view(url=reverse_lazy('tastypie_swagger:index'), permanent=False)),
+    url(r'^prs$', views.index),
+    url(r'^pr/(?P<pr_number>\d+)$', views.pr_detail),
+    url(r'^run/(?P<run_number>\d+)$', views.run_detail),
 )
 
 if settings.DEBUG:

@@ -17,7 +17,8 @@ class PRResource(ModelResource):
     def dehydrate(self, bundle):
         bundle.data['runs'] = [{'id': p.id,
                                 'result': p.status,
-                                'commit': p.commit} for p in bundle.obj.run_set.all()]
+                                'commit': p.commit} for p in
+                               bundle.obj.run_set.all().order_by('-datestamp')]
         return bundle
 
 
