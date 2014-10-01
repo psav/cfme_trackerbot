@@ -10,6 +10,10 @@ class PR(models.Model):
     wip = models.BooleanField(default=False)
 
     @property
+    def reverse_run_set(self):
+        return self.run_set.order_by('-datestamp')
+
+    @property
     def status(self):
         runs = self.run_set.all().order_by('-datestamp')
         if runs:
