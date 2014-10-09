@@ -38,7 +38,8 @@ class Run(models.Model):
             results.append(task.result)
         if "invalid" in results and len(results) > 0:
             return "invalid"
-        elif ("pending" in results or "provisioning" in results) and len(results) > 0:
+        elif ("pending" in results or "provisioning" in results
+              or "running" in results) and len(results) > 0:
             return "pending"
         elif len(results) > 0:
             all_passed = all([result == "passed" for result in results])
