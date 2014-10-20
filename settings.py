@@ -44,6 +44,7 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'middleware.AllowAllXHROrigins',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -110,6 +111,6 @@ TASTYPIE_SWAGGER_API_MODULE = 'urls.api'
 BOOTSTRAP_VERSION = '3.0.3'
 
 try:
-    from settings_local import *
+    from settings_local import *  # NOQA
 except ImportError:
     pass
