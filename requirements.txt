@@ -1,5 +1,4 @@
 Django<1.7
-django-cors-headers
 django-tastypie
 django-tastypie-swagger
 south
