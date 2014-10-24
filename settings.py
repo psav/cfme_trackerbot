@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'tastypie',
     'tastypie_swagger',
+    'grapher',
     'provider_templates',
     'pull_requests',
     'south',
