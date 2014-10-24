@@ -8,7 +8,9 @@ from tastypie.api import Api
 
 from provider_templates import resources
 from pull_requests import resources as pr_resources
+from grapher import resources as grapher_resources
 from pull_requests import views
+from grapher import views as grapher_views
 
 admin.autodiscover()
 
@@ -20,6 +22,7 @@ api.register(resources.ProviderTemplateDetailResource())
 api.register(pr_resources.PRResource())
 api.register(pr_resources.RunResource())
 api.register(pr_resources.TaskResource())
+api.register(grapher_resources.BuildResource())
 
 
 urlpatterns = patterns('',
@@ -31,6 +34,7 @@ urlpatterns = patterns('',
     url(r'^prs$', views.index),
     url(r'^pr/(?P<pr_number>\d+)$', views.pr_detail),
     url(r'^run/(?P<run_number>\d+)$', views.run_detail),
+    url(r'^graph/(?P<stream_name>.*)$', grapher_views.show_graph),
 )
 
 if settings.DEBUG:
