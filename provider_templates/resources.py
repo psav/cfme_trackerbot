@@ -47,6 +47,9 @@ class ProviderResource(ModelResource):
 
 
 class GroupResource(ModelResource):
+    # use_in always returns False: active never shows up in the API and can't be changed by the API
+    active = fields.BooleanField(readonly=True, use_in=lambda bundle: False)
+
     class Meta:
         queryset = models.Group.objects.all()
         resource_name = 'group'

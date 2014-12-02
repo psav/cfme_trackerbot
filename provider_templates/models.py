@@ -87,12 +87,30 @@ class ProviderTemplateDetail(models.Model):
         return super(ProviderTemplateDetail, self).save()
 
 
+# default queryset only returns active groups
+class ActiveGroupManager(models.Manager):
+    def get_query_set(self):
+        return super(ActiveGroupManager, self).get_query_set().filter(active=True)
+
+
 # Template grouping, normally used for stream name,
 # but can be handy for things like power control
+# XXX: Groups can be inactive. This model's default manager (Group.objects) will filter
+# XXX: out inactive Groups. To work with inactive groups, use the _unfiltered_objects manager.
 class Group(models.Model):
     name = models.CharField(max_length=63, primary_key=True)
     # Whether or not this group is an appliance stream, which usually it usually will be
     stream = models.BooleanField(default=True)
+    active = models.BooleanField(default=True,
+        help_text="Unsetting the active flag will make it appear that this group has been deleted "
+                  "everywhere but in the Django admin site. Use with caution.")
+
+    # active manager makes it easy to get at only active objects
+    # define it as the default manager
+    objects = ActiveGroupManager()
+
+    # We still want to see inactive groups in the admin, so use the normal Django manager for that
+    _unfiltered_objects = models.Manager()
 
     class Meta:
         verbose_name = 'Group'
