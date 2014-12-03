@@ -26,10 +26,13 @@ api.register(grapher_resources.BuildResource())
 
 
 urlpatterns = patterns('',
+    # includes
     url(r'', include(api.urls)),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^template/', include('provider_templates.urls')),
     url(r'^api/doc', include('tastypie_swagger.urls', namespace='tastypie_swagger')),
+
+    # endpoints
     url('^$', RedirectView.as_view(url=reverse_lazy('tastypie_swagger:index'), permanent=False)),
     url(r'^prs$', views.index),
     url(r'^pr/(?P<pr_number>\d+)$', views.pr_detail),
