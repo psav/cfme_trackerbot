@@ -3,12 +3,13 @@ import models
 
 
 class PRAdmin(admin.ModelAdmin):
-    list_display = ('number', 'description', 'current_commit_head', 'wip', 'status')
+    list_display = ('number', 'description', 'current_commit_head', 'wip', 'status',
+                    'retest_available')
 admin.site.register(models.PR, PRAdmin)
 
 
 class RunAdmin(admin.ModelAdmin):
-    list_display = ('pr', 'commit', 'datestamp', 'status')
+    list_display = ('pr', 'commit', 'datestamp', 'status', 'retest')
 admin.site.register(models.Run, RunAdmin)
 
 

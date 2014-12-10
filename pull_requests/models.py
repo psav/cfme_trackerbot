@@ -21,6 +21,14 @@ class PR(models.Model):
         else:
             return "untested"
 
+    @property
+    def retest_available(self):
+        runs = self.run_set.all().order_by('-datestamp')
+        if runs:
+            return not runs[0].retest
+        else:
+            return True
+
     def __unicode__(self):
         return "{}: {}".format(str(self.number), self.status)
 
@@ -29,6 +37,7 @@ class Run(models.Model):
     pr = models.ForeignKey('PR', related_name='run_set')
     commit = models.CharField(max_length=255, default="None")
     datestamp = models.DateTimeField()
+    retest = models.BooleanField(default=False)
 
     @property
     def status(self):

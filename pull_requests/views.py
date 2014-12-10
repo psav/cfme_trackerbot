@@ -16,3 +16,10 @@ def pr_detail(request, pr_number):
 def run_detail(request, run_number):
     run = get_object_or_404(Run, pk=run_number)
     return render(request, 'run_detail.html', {'run': run, 'artifact_ip': ARTIFACT_IP})
+
+
+def retest(request, pr_number):
+    run = Run.objects.all().filter(pr__number=pr_number).order_by('-datestamp')[0]
+    run.retest = True
+    run.save()
+    return index(request)
