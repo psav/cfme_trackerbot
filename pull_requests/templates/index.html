@@ -88,6 +88,9 @@
 		    {% elif "invalid" in pr.status %}class="btn btn-info">Invalid
 		    {% elif "pending" in pr.status %}class="btn btn-warning">Pending
 		    {% endif %}</a>
+                {% if not pr.wip and pr.retest_available %}
+                <a href="{% url 'pull_requests.views.retest' pr.number %}" class="btn btn-info">Retest</a>
+                {% endif %}
 		</td>
               </tr>
               {% endfor %}

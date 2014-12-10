@@ -1,5 +1,5 @@
 from tastypie.authorization import Authorization
-from tastypie.resources import ModelResource, ALL
+from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
 from tastypie import fields
 import models
 
@@ -13,6 +13,7 @@ class PRResource(ModelResource):
         queryset = models.PR.objects.all()
         resource_name = 'pr'
         authorization = Authorization()
+        filtering = {'number': ALL}
 
     def dehydrate(self, bundle):
         bundle.data['runs'] = [{'id': p.id,
@@ -33,6 +34,8 @@ class RunResource(ModelResource):
         queryset = models.Run.objects.all()
         resource_name = 'run'
         authorization = Authorization()
+        filtering = {'retest': ALL, 'pr': ALL_WITH_RELATIONS}
+        ordering = ['datestamp']
 
     def dehydrate(self, bundle):
         bundle.data['tasks'] = [{'tid': p.tid,

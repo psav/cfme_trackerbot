@@ -84,7 +84,7 @@
                 <td>{{run.id}}</td>
                 <td>{{run.datestamp}}</td>
                 <td>{{run.commit}}</td>
-                <td><a href="{% url 'pull_requests.views.run_detail' run.id %}" {% if "passed" in run.status %}class="btn btn-success">Passed
+                <td><a href="{% url 'pull_requests.views.run_detail' pr.number %}" {% if "passed" in run.status %}class="btn btn-success">Passed
 		    {% elif "failed" in run.status %}class="btn btn-danger">Failed - {{run.status}}
 		    {% elif "invalid" in run.status %}class="btn btn-info">Invalid
 		    {% elif "pending" in run.status %}class="btn btn-warning">Pending

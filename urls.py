@@ -37,6 +37,7 @@ urlpatterns = patterns('',
     url(r'^prs$', views.index),
     url(r'^pr/(?P<pr_number>\d+)$', views.pr_detail),
     url(r'^run/(?P<run_number>\d+)$', views.run_detail),
+    url(r'^retest/(?P<pr_number>\d+)$', views.retest),
     url(r'^graph/(?P<stream_name>.*)$', grapher_views.show_graph),
 )
 
