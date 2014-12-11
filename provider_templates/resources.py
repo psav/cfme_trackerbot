@@ -55,7 +55,8 @@ class GroupResource(ModelResource):
         resource_name = 'group'
         authorization = Authorization()
         filtering = {
-            'stream': ALL
+            'stream': ALL,
+            'name': ALL
         }
 
     def dehydrate(self, bundle):
