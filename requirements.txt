@@ -3,3 +3,4 @@ django-tastypie
 django-tastypie-swagger
 south
 pygal
+requests

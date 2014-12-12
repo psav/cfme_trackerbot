@@ -11,6 +11,7 @@ from pull_requests import resources as pr_resources
 from grapher import resources as grapher_resources
 from pull_requests import views
 from grapher import views as grapher_views
+from utils import utils as util_views
 
 admin.autodiscover()
 
@@ -39,6 +40,7 @@ urlpatterns = patterns('',
     url(r'^run/(?P<run_number>\d+)$', views.run_detail),
     url(r'^retest/(?P<pr_number>\d+)$', views.retest),
     url(r'^graph/(?P<stream_name>.*)$', grapher_views.show_graph),
+    url(r'^sauce_proxy/(?P<sauce_url>.*)$', util_views.sauce_proxy),
 )
 
 if settings.DEBUG:
