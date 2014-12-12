@@ -11,7 +11,7 @@ from pull_requests import resources as pr_resources
 from grapher import resources as grapher_resources
 from pull_requests import views
 from grapher import views as grapher_views
-from utils import utils as util_views
+from dashboard import views as dashboard_views
 
 admin.autodiscover()
 
@@ -34,13 +34,15 @@ urlpatterns = patterns('',
     url(r'^api/doc', include('tastypie_swagger.urls', namespace='tastypie_swagger')),
 
     # endpoints
-    url('^$', RedirectView.as_view(url=reverse_lazy('tastypie_swagger:index'), permanent=False)),
+    #url('^$', RedirectView.as_view(url=reverse_lazy('tastypie_swagger:index'), permanent=False)),
+    url('^$', dashboard_views.dashboard),
     url(r'^prs$', views.index),
     url(r'^pr/(?P<pr_number>\d+)$', views.pr_detail),
     url(r'^run/(?P<run_number>\d+)$', views.run_detail),
     url(r'^retest/(?P<pr_number>\d+)$', views.retest),
     url(r'^graph/(?P<stream_name>.*)$', grapher_views.show_graph),
-    url(r'^sauce_proxy/(?P<sauce_url>.*)$', util_views.sauce_proxy),
+    url(r'^sauce_proxy/(?P<sauce_url>.*)$', dashboard_views.sauce_proxy),
+
 )
 
 if settings.DEBUG:
