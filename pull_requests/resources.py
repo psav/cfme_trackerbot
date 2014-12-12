@@ -14,6 +14,7 @@ class PRResource(ModelResource):
         resource_name = 'pr'
         authorization = Authorization()
         filtering = {'number': ALL}
+        ordering = ['runs']
 
     def dehydrate(self, bundle):
         bundle.data['runs'] = [{'id': p.id,
@@ -53,6 +54,7 @@ class TaskResource(ModelResource):
         resource_name = 'task'
         authorization = Authorization()
         filtering = {'result': ALL, 'cleanup': ALL}
+        ordering = ['datestamp']
 
     def dehydrate(self, bundle):
         bundle.data['pr_number'] = bundle.obj.run.pr.number
