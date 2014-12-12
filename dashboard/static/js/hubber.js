@@ -1,10 +1,13 @@
 function hubber_build_graphs(){
     url = base_url + 'api/group/?format=json&limit=3'
     $.getJSON(url, function( data ) {
+	num_obj = Object.keys(data['objects']).length
+	offset = 12 / num_obj
+	width = 1000/num_obj
 	$.each(data['objects'],
 	       function(key, val){
 		   $( "<div>", {
-		       "class": "col-md-4",
+		       "class": "col-md-" + offset,
 		   }).append(
 		       $("<div>", {
 			   "class": "panel panel-default"
@@ -19,7 +22,7 @@ function hubber_build_graphs(){
 			   $("<div>", {
 			       "class": "panel-body",
 			       "id": val['name'],
-			       "style": "width:300px;height:150px;"
+			       "style": "width:" + width + "px;height:150px;"
 			       }),
 			   $("<div>", {
 			   "id": val['name'] + "-data",
