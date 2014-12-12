@@ -1,7 +1,8 @@
 from django.http import HttpResponse
+from django.shortcuts import render
 import requests
 import json
-from settings import SAUCE_API, SAUCE_USER
+from settings import SAUCE_API, SAUCE_USER, BASE_URL, JENKINS_URL
 
 
 def sauce_proxy(request, sauce_url):
@@ -20,3 +21,7 @@ def sauce_proxy(request, sauce_url):
     else:
         data = jdata
     return HttpResponse(data, "application/json")
+
+
+def dashboard(request):
+    return render(request, 'dashboard.html', {'base_url': BASE_URL, 'jenkins_url': JENKINS_URL})

@@ -1,0 +1,97 @@
+{% load staticfiles %}
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href={% static "css/bootstrap.min.css" %}>
+    <link rel="stylesheet" href={% static "css/patternfly.min.css" %}>
+    <script src={% static "js/jquery-2.1.1.js" %}></script>
+    <script src={% static "js/bootstrap.min.js" %}></script>
+    <script src={% static "js/hubber.js" %}></script>
+    <script src={% static "js/flot/jquery.flot.js" %}></script>
+    <script>
+       base_url = '{{ base_url }}'
+       jenkins_url = '{{ jenkins_url }}'
+    </script>
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-pf" role="navigation">
+      <div class="container">
+	<div class="navbar-header">
+	</div>
+	<p class="navbar-brand">
+	  <img src={% static "img/brand-hubber.png" %}> The CFME-QE Dashboard (v.zero)
+	</p>
+      </div>
+    </nav>
+    <script>
+      hubber_build_graphs()
+      hubber_sauce_jobs()
+      hubber_latest_templates()
+      hubber_prt_results()
+    </script>
+    <p></p>
+    <div class="container">
+      <div class="row">
+	<div class="col-md-12">
+	  <div class="panel panel-default">
+	    <div class="panel-heading">
+	      <strong class="panel-title">Hubber - The CFME-QE Dashboard</strong>
+	    </div>
+	    <div class="panel-body">
+	      All data is accessed in realtime from the relevant systems. No data is cached.
+	    </div>
+	  </div>
+	</div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="alert alert-success">
+	<span class="pficon pficon-ok"></span>
+	<strong>Awesome!</strong> No issues to report.
+      </div>
+    </div>
+
+    <div class="container">
+      <div id="jenkins_graphs" class="row">
+    </div>
+    </div>
+    <div class="container">
+      <div class="row">
+	<div class="col-md-8">
+	  <div class="row">
+	    <div class="col-md-12">
+	      <div class="panel panel-default">
+		<div class="panel-heading">
+		  <strong class="panel-title">Sauce jobs</strong>
+		</div>
+		<div class="panel-body" id="sauce_data"><div class="spinner spinner-xs spinner-inline"></div><strong>Loading...</strong></div>
+	      </div>
+	    </div>
+	  </div>
+	  <div class="row">
+	    <div class="col-md-12">
+	      <div class="panel panel-default">
+		<div class="panel-heading">
+		  <strong class="panel-title">PRT Recent Results</strong>
+		</div>
+		<div class="panel-body" id="prt_data"><div class="spinner spinner-xs spinner-inline"></div><strong>Loading...</strong></div>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
+	<div class="col-md-4">
+	  <div class="panel panel-default">
+	    <div class="panel-heading">
+	      <strong class="panel-title">Provider Templates</strong>
+	    </div>
+	    <div class="panel-body" id="templates"><div class="spinner spinner-xs spinner-inline"></div><strong>Loading...</strong></div>
+	  </div>
+	</div>
+
+      </div>
+    </div>
+  </body>
+</html>
