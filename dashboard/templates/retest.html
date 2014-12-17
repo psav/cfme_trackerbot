@@ -1,0 +1,36 @@
+{% extends 'dashboard.html' %}
+
+{% block body-script %}
+{{ block.super }}
+<script>
+hubber_retest_templates();
+$("#tab_retest").addClass("active")
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="col-md-10">
+    <h1>Templates</h1>
+    <p>Click on a provider in a template panel to retest a specific template on that provider (or all providers)</p>
+    <div id="retest-templates">
+      <div class="spinner spinner-xs spinner-inline"></div><strong>Loading...</strong>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <h1>Providers</h1>
+    <p>Click on a provider to retest all templates on that provider</p>
+    <div id="retest-providers">
+      <div class="spinner spinner-xs spinner-inline"></div><strong>Loading...</strong>
+    </div>
+  </div>
+</div>
+
+<div class="modal" role="dialog" id="templateUpdateResponse" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body"></div>
+    </div>
+  </div>
+</div>
+{% endblock %}

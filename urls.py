@@ -2,16 +2,11 @@ from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.core.urlresolvers import reverse_lazy
-from django.views.generic.base import RedirectView
 from tastypie.api import Api
 
 from provider_templates import resources
 from pull_requests import resources as pr_resources
 from grapher import resources as grapher_resources
-from pull_requests import views
-from grapher import views as grapher_views
-from dashboard import views as dashboard_views
 
 admin.autodiscover()
 
@@ -28,21 +23,14 @@ api.register(grapher_resources.BuildResource())
 
 urlpatterns = patterns('',
     # includes
+    # TODO: Break the API up by app, similar to the URLs
     url(r'', include(api.urls)),
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^template/', include('provider_templates.urls')),
+    url(r'', include("dashboard.urls")),
+    url(r'^pr/?$', include("pull_requests.urls")),
+    url(r'^template/', include("provider_templates.urls")),
+    url(r'^graph/', include("grapher.urls")),
     url(r'^api/doc', include('tastypie_swagger.urls', namespace='tastypie_swagger')),
-
-    # endpoints
-    #url('^$', RedirectView.as_view(url=reverse_lazy('tastypie_swagger:index'), permanent=False)),
-    url('^$', dashboard_views.dashboard),
-    url(r'^prs$', views.index),
-    url(r'^pr/(?P<pr_number>\d+)$', views.pr_detail),
-    url(r'^run/(?P<run_number>\d+)$', views.run_detail),
-    url(r'^retest/(?P<pr_number>\d+)$', views.retest),
-    url(r'^graph/(?P<stream_name>.*)$', grapher_views.show_graph),
-    url(r'^sauce_proxy/(?P<sauce_url>.*)$', dashboard_views.sauce_proxy),
-
+    url(r'^admin/', include(admin.site.urls)),
 )
 
 if settings.DEBUG:

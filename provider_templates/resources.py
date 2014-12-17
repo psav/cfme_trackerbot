@@ -9,7 +9,8 @@ class TemplateResource(ModelResource):
     group = fields.ToOneField('provider_templates.resources.GroupResource', 'group', full=True)
 
     class Meta:
-        queryset = models.Template.objects.all()
+        # Select all the providers along with the templates in the default queryset for speed
+        queryset = models.Template.objects.select_related("providers")
         resource_name = 'template'
         authorization = Authorization()
         filtering = {
@@ -19,7 +20,10 @@ class TemplateResource(ModelResource):
         }
 
     def dehydrate(self, bundle):
-        bundle.data['usable_providers'] = [p.key for p in bundle.obj.usable_providers]
+        providers = bundle.obj.providers.all()
+        bundle.data['usable_providers'] = [p.key for p in providers.filter(
+            providertemplatedetail__usable=True)]
+        bundle.data['providers'] = [p.key for p in providers]
         return bundle
 
 
