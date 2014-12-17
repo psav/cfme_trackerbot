@@ -1,7 +1,6 @@
 import random
 
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
 
 from models import ProviderTemplateDetail
 
@@ -19,9 +18,45 @@ def templates_to_test(request):
     return HttpResponse(text, content_type="text/plain")
 
 
-def retest(request, provider_key, template_name):
-    ptd = get_object_or_404(ProviderTemplateDetail, provider=provider_key, template=template_name)
-    ptd.tested = False
-    ptd.save()
-    msg = 'Template "{}" on provider "{}" marked for retest'.format(template_name, provider_key)
+def retest(request, provider_key=None, template_name=None):
+    if provider_key and template_name:
+        filter = {'provider': provider_key, 'template': template_name}
+        msg = 'Template "{}" marked for retest on provider "{}"'.format(template_name, provider_key)
+    elif provider_key:
+        filter = {'provider': provider_key}
+        msg = 'All templates marked for retest on provider "{}"'.format(provider_key)
+    elif template_name:
+        filter = {'template': template_name}
+        msg = 'Template "{}" marked for retest on all providers'.format(template_name)
+
+    updated = ProviderTemplateDetail.objects.filter(**filter).update(tested=False)
+
+    if not updated:
+        msg = "No templates marked for retest (no matches)."
+
+    return HttpResponse(msg, content_type="text/plain")
+
+
+def mark(request, mark, provider_key=None, template_name=None):
+    # mark should only be usable or unusable
+    if mark == 'usable':
+        usable = True
+    else:
+        usable = False
+
+    if provider_key and template_name:
+        filter = {'provider': provider_key, 'template': template_name}
+        msg = 'Template "{}" marked {} on provider "{}"'.format(template_name, mark, provider_key)
+    elif provider_key:
+        filter = {'provider': provider_key}
+        msg = 'All templates marked {} on provider "{}"'.format(mark, provider_key)
+    elif template_name:
+        filter = {'template': template_name}
+        msg = 'Template "{}" marked {} on all providers'.format(template_name, mark)
+
+    updated = ProviderTemplateDetail.objects.filter(**filter).update(usable=usable)
+
+    if not updated:
+        msg = "No templates marked {} (no matches).".format(mark)
+
     return HttpResponse(msg, content_type="text/plain")

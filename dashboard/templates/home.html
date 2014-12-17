@@ -1,0 +1,61 @@
+{% extends 'dashboard.html' %}
+
+{% block body-script %}
+{{ block.super }}
+<script>
+hubber_build_graphs();
+hubber_sauce_jobs();
+hubber_latest_templates();
+hubber_prt_results();
+$("#tab_home").addClass("active")
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row" id="jenkins_graphs"></div>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <strong class="panel-title">Provider Templates</strong>
+        </div>
+        <div class="panel-body" id="templates">
+          <div class="spinner spinner-xs spinner-inline"></div><strong>Loading...</strong>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <strong class="panel-title">PRT Recent Results</strong>
+        </div>
+        <div class="panel-body" id="prt_data">
+          <div class="spinner spinner-xs spinner-inline"></div><strong>Loading...</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-8">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <strong class="panel-title">Sauce jobs</strong>
+        </div>
+        <div class="panel-body" id="sauce_data">
+          <div class="spinner spinner-xs spinner-inline"></div><strong>Loading...</strong>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <strong class="panel-title">Hubber - The CFME-QE Dashboard</strong>
+        </div>
+        <div class="panel-body">
+          All data is accessed in realtime from the relevant systems. No data is cached.
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
