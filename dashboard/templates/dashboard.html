@@ -3,7 +3,6 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="stylesheet" href={% static 'css/bootstrap.min.css' %}/>
   <link rel="stylesheet" href={% static 'css/patternfly.min.css' %}/>
   <script src={% static "js/jquery-2.1.1.js" %}></script>
   <script src={% static "js/bootstrap.min.js" %}></script>
@@ -16,6 +15,7 @@
   jenkins_url = '{{ jenkins_url }}'
   sauce_proxy = '{% url "dashboard.views.sauce_proxy" "" %}'
   </script>
+  <title>{% block title %}{% endblock %}</title>
 </head>
 
 <body>
@@ -35,9 +35,7 @@
         <li id="tab_prt">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">PR Tester</a>
           <ul class="dropdown-menu">
-            <li><a href="#">Pull Requests</a>
-            </li>
-            <li><a href="#">Runs</a>
+            <li><a href="{% url 'pull_requests.views.index' %}">Pull Requests</a>
             </li>
           </ul>
         </li>

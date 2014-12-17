@@ -196,6 +196,7 @@ function hubber_retest_click_handler(event) {
     // so we show the modal before getting its contents, allowing that GET request to serve as a delay for the modal to appear
     // allowing us to set the z-order. Ideally, of course, the modal would "just work".
     var retest_url = base_url + "template/retest/" + event.data.provider_key + "/" + event.data.template_name
+    $("#templateUpdateResponse .modal-body").html('<div class="spinner spinner-xs spinner-inline"></div><strong>Loading...</strong>');
     $("#templateUpdateResponse").modal('show');
     $.get(retest_url, function(data) {
         $("#templateUpdateResponse .modal-body").html(data);
@@ -206,6 +207,7 @@ function hubber_retest_click_handler(event) {
 function hubber_mark_click_handler(event) {
     // same z-order issue comment as in the retest click handler. Also, it would be easy to combine the two functions
     var mark_url = base_url + "template/mark/" + event.data.usable + "/" + event.data.provider_key + "/" + event.data.template_name
+    $("#templateUpdateResponse .modal-body").html('<div class="spinner spinner-xs spinner-inline"></div><strong>Loading...</strong>');
     $("#templateUpdateResponse").modal('show');
     $.get(mark_url, function(data) {
         $("#templateUpdateResponse .modal-body").html(data);
