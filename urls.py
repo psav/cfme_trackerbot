@@ -26,7 +26,7 @@ urlpatterns = patterns('',
     # TODO: Break the API up by app, similar to the URLs
     url(r'', include(api.urls)),
     url(r'', include("dashboard.urls")),
-    url(r'^pr/?$', include("pull_requests.urls")),
+    url(r'^pr/', include("pull_requests.urls")),
     url(r'^template/', include("provider_templates.urls")),
     url(r'^graph/', include("grapher.urls")),
     url(r'^api/doc', include('tastypie_swagger.urls', namespace='tastypie_swagger')),
